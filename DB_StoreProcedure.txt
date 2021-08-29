@@ -1,0 +1,136 @@
+USE bd_colegio;
+
+-- MOSTRAR LOS PROCEDIMIENTOS ALMACENADOS
+-- show procedure status;
+
+-- show procedure status where Name = 'name';
+
+-- --------------------------------------------------------
+DROP PROCEDURE IF EXISTS sp_ListaApoderado;
+CREATE PROCEDURE sp_ListaApoderado ()
+SELECT *, CONCAT(apo_Paterno, ' ', apo_Materno, ' ', apo_Nombres) AS nombre_completo 
+FROM apoderado ORDER BY nombre_completo;
+
+DROP PROCEDURE IF EXISTS sp_ListaDocente;
+CREATE PROCEDURE sp_ListaDocente ()
+SELECT *, CONCAT(doc_Paterno, ' ', doc_Materno, ' ', doc_Nombres) AS nombre_completo 
+FROM docente ORDER BY nombre_completo;
+
+DROP PROCEDURE IF EXISTS sp_ListaAlumno;
+CREATE PROCEDURE sp_ListaAlumno ()
+SELECT *, CONCAT(alum_Paterno, ' ', alum_Materno, ' ', alum_Nombres) AS nombre_completo 
+FROM alumno ORDER BY nombre_completo;
+
+DROP PROCEDURE IF EXISTS sp_ListaUsuario;
+CREATE PROCEDURE sp_ListaUsuario ()
+SELECT *, CONCAT(usu_Paterno, ' ', usu_Materno, ' ', usu_Nombres) AS nombre_completo 
+FROM usuario ORDER BY nombre_completo;
+
+-- --------------------------------------------------------
+
+DROP PROCEDURE IF EXISTS sp_BuscaUsuario;
+CREATE PROCEDURE sp_BuscaUsuario ( _id VARCHAR(13) )
+SELECT * FROM usuario WHERE usu_Id = _id;
+
+-- DROP PROCEDURE IF EXISTS sp_BuscaUsuarioFoto;
+-- CREATE PROCEDURE sp_BuscaUsuarioFoto ( _id VARCHAR(13) )
+-- SELECT usu_Foto FROM usuario WHERE usu_Id = _id;
+
+-- --------------------------------------------------------
+
+DROP PROCEDURE IF EXISTS sp_RegistraAlumno;
+CREATE PROCEDURE sp_RegistraAlumno (
+_id VARCHAR(13),
+_documento VARCHAR(12),
+_paterno VARCHAR(30),
+_materno VARCHAR(30),
+_nombres VARCHAR(40),
+_nacimiento CHAR(10),
+_sexo CHAR(1),
+_telefono VARCHAR(9),
+_correo VARCHAR(100),
+_direccion VARCHAR(100),
+_clave VARCHAR(20),
+_estado CHAR(1),
+_registro DATETIME,
+_ubigeo CHAR(6),
+_foto VARCHAR(255),
+_tipodo_Id TINYINT
+)
+INSERT INTO alumno (alum_Id, alum_Documento, alum_Paterno, alum_Materno, alum_Nombres, alum_Nacimiento, alum_Sexo, alum_Telefono, alum_Correo, alum_Direccion, alum_Clave, alum_Estado, alum_Registro, alum_Ubigeo, alum_Foto, alum_tipodo_Id) 
+VALUES (_id, _documento, _paterno, _materno, _nombres, _nacimiento, _sexo, _telefono, _correo, _direccion, _clave, _estado, _registro, _ubigeo, _foto, _tipodo_Id);
+
+DROP PROCEDURE IF EXISTS sp_RegistraUsuario;
+CREATE PROCEDURE sp_RegistraUsuario (
+_id VARCHAR(13),
+_documento VARCHAR(12),
+_paterno VARCHAR(30),
+_materno VARCHAR(30),
+_nombres VARCHAR(40),
+_nacimiento CHAR(10),
+_sexo CHAR(1),
+_telefono VARCHAR(9),
+_correo VARCHAR(100),
+_direccion VARCHAR(100),
+_clave VARCHAR(255),
+_estado CHAR(1),
+_registro DATETIME,
+_ubigeo CHAR(6),
+_foto VARCHAR(255),
+_tipodo_Id TINYINT,
+_tipous_Id TINYINT
+)
+INSERT INTO usuario (usu_Id,usu_Documento,usu_Paterno,usu_Materno,usu_Nombres,usu_Nacimiento,usu_Sexo,usu_Telefono,usu_Correo,usu_Direccion,usu_Clave,usu_Estado,usu_Registro,usu_Ubigeo,usu_Foto,usu_tipodo_Id,usu_tipous_Id) 
+VALUES (_id, _documento, _paterno, _materno, _nombres, _nacimiento, _sexo, _telefono, _correo, _direccion, _clave, _estado, _registro, _ubigeo, _foto, _tipous_Id, _tipodo_Id);
+
+-- --------------------------------------------------------
+
+DROP PROCEDURE IF EXISTS sp_ModificaUsuario;
+CREATE PROCEDURE sp_ModificaUsuario (
+_id VARCHAR(13),
+_documento VARCHAR(12),
+_paterno VARCHAR(30),
+_materno VARCHAR(30),
+_nombres VARCHAR(40),
+_nacimiento CHAR(10),
+_sexo CHAR(1),
+_telefono VARCHAR(9),
+_correo VARCHAR(100),
+_direccion VARCHAR(100),
+_clave VARCHAR(255),
+_estado CHAR(1),
+_registro DATETIME,
+_ubigeo CHAR(6),
+_tipodo_Id TINYINT,
+_tipous_Id TINYINT
+)
+UPDATE usuario SET 
+usu_Documento = _documento,
+usu_Paterno = _paterno,
+usu_Materno = _materno,
+usu_Nombres = _nombres,
+usu_Nacimiento = _nacimiento,
+usu_Sexo = _sexo,
+usu_Telefono = _telefono,
+usu_Correo = _correo,
+usu_Direccion = _direccion,
+usu_Clave = _clave,
+usu_Estado = _estado,
+usu_Registro = _registro,
+usu_Ubigeo = _ubigeo,
+usu_tipodo_Id = _tipous_Id,
+usu_tipous_Id = _tipodo_Id
+WHERE usu_Id = _id;
+
+DROP PROCEDURE IF EXISTS sp_ModificaUsuarioFoto;
+CREATE PROCEDURE sp_ModificaUsuarioFoto (
+_id VARCHAR(13),
+_foto VARCHAR(255)
+)
+UPDATE usuario SET usu_Foto = _foto WHERE usu_Id = _id;
+
+-- --------------------------------------------------------
+
+DROP PROCEDURE IF EXISTS sp_EliminaUsuario;
+CREATE PROCEDURE sp_EliminaUsuario ( _id VARCHAR(13) )
+DELETE FROM usuario WHERE usu_Id = _id;

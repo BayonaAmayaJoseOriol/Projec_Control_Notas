@@ -1,0 +1,384 @@
+DROP DATABASE IF EXISTS `bd_colegio`;
+
+CREATE DATABASE `bd_colegio` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+USE bd_colegio;
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+-- 
+-- Base de datos: `bd_colegio`
+-- 
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `departamento`
+-- 
+
+DROP TABLE IF EXISTS `departamento`;
+CREATE TABLE `departamento` (
+  `dep_Codigo` CHAR(2) NOT NULL,
+  `dep_Descripcion` VARCHAR(50) NOT NULL UNIQUE,
+  PRIMARY KEY (`dep_Codigo`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM departamento
+-- SELECT DISTINCT(est_Sexo) AS Espe FROM departamento
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `provincia`
+-- 
+
+DROP TABLE IF EXISTS `provincia`;
+CREATE TABLE `provincia` (
+  `prov_Codigo` CHAR(4) NOT NULL,
+  `prov_Descripcion` VARCHAR(50) NOT NULL,
+  `prov_dep_Codigo` CHAR(2) NOT NULL,
+  PRIMARY KEY (`prov_Codigo`),
+  FOREIGN KEY (`prov_dep_Codigo`) REFERENCES `departamento`(`dep_Codigo`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM provincia
+-- SELECT DISTINCT(est_Sexo) AS Espe FROM provincia
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `distrito`
+-- 
+
+DROP TABLE IF EXISTS `distrito`;
+CREATE TABLE `distrito` (
+  `dist_Codigo` CHAR(6) NOT NULL,
+  `dist_Descripcion` VARCHAR(50) NOT NULL,
+  `dist_prov_Codigo` CHAR(4) NOT NULL,
+  PRIMARY KEY (`dist_Codigo`),
+  FOREIGN KEY (`dist_prov_Codigo`) REFERENCES `provincia`(`prov_Codigo`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM distrito
+-- SELECT DISTINCT(est_Sexo) AS Espe FROM distrito
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `tipo_documento`
+-- 
+
+DROP TABLE IF EXISTS `tipo_documento`;
+CREATE TABLE `tipo_documento` (
+  `tipodo_Id` TINYINT NOT NULL AUTO_INCREMENT,
+  `tipodo_Descripcion` VARCHAR(30) NOT NULL UNIQUE,
+  PRIMARY KEY  (`tipodo_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM tipo_documento
+-- SELECT DISTINCT(est_Sexo) AS Espe FROM tipo_documento
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `estado`
+-- 
+
+DROP TABLE IF EXISTS `estado`;
+CREATE TABLE `estado` (
+  `est_Id` CHAR(1) NOT NULL,
+  `est_Descripcion` VARCHAR(15) NOT NULL UNIQUE,
+  PRIMARY KEY  (`est_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `docente`
+-- 
+
+DROP TABLE IF EXISTS `docente`;
+CREATE TABLE `docente` (
+  `doc_Id` VARCHAR(13) NOT NULL,
+  `doc_Documento` VARCHAR(12) NOT NULL UNIQUE,
+  `doc_Paterno` VARCHAR(30) NOT NULL,
+  `doc_Materno` VARCHAR(30) NOT NULL,
+  `doc_Nombres` VARCHAR(40) NOT NULL,
+  `doc_Nacimiento` CHAR(10) NULL,
+  `doc_Sexo` CHAR(1) NULL,
+  `doc_Telefono` VARCHAR(9) NULL,
+  `doc_Correo` VARCHAR(100) NULL,
+  `doc_Direccion` VARCHAR(100) NULL,
+  `doc_Clave` VARCHAR(20) NOT NULL,
+  `doc_Estado` CHAR(1) NOT NULL,
+  `doc_Registro` DATETIME NOT NULL,
+  `doc_Ubigeo` CHAR(6) NOT NULL,
+  `doc_Foto` VARCHAR(255) NULL,
+  `doc_tipodo_Id` TINYINT NOT NULL,
+  PRIMARY KEY (`doc_Id`),
+  FOREIGN KEY (`doc_Estado`) REFERENCES `estado`(`est_Id`),
+  FOREIGN KEY (`doc_Ubigeo`) REFERENCES `distrito`(`dist_Codigo`),
+  FOREIGN KEY (`doc_tipodo_Id`) REFERENCES `tipo_documento`(`tipodo_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM docente
+-- DELETE FROM docente
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `apoderado`
+-- 
+
+DROP TABLE IF EXISTS `apoderado`;
+CREATE TABLE `apoderado` (
+  `apo_Id` VARCHAR(13) NOT NULL,
+  `apo_Documento` VARCHAR(12) NOT NULL UNIQUE,
+  `apo_Paterno` VARCHAR(30) NOT NULL,
+  `apo_Materno` VARCHAR(30) NOT NULL,
+  `apo_Nombres` VARCHAR(40) NOT NULL,
+  `apo_Nacimiento` CHAR(10) NULL,
+  `apo_Sexo` CHAR(1) NULL,
+  `apo_Telefono` VARCHAR(9) NULL,
+  `apo_Correo` VARCHAR(100) NULL,
+  `apo_Direccion` VARCHAR(100) NULL,
+  `apo_Clave` VARCHAR(20) NOT NULL,
+  `apo_Estado` CHAR(1) NOT NULL,
+  `apo_Registro` DATETIME NOT NULL,
+  `apo_Ubigeo` CHAR(6) NOT NULL,
+  `apo_Foto` VARCHAR(255) NULL,
+  `apo_tipodo_Id` TINYINT NOT NULL,
+  PRIMARY KEY (`apo_Id`),
+  FOREIGN KEY (`apo_Ubigeo`) REFERENCES `distrito`(`dist_Codigo`),
+  FOREIGN KEY (`apo_tipodo_Id`) REFERENCES `tipo_documento`(`tipodo_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `alumno`
+-- 
+
+DROP TABLE IF EXISTS `alumno`;
+CREATE TABLE `alumno` (
+  `alum_Id` VARCHAR(13) NOT NULL,
+  `alum_Documento` VARCHAR(12) NOT NULL UNIQUE,
+  `alum_Paterno` VARCHAR(30) NOT NULL,
+  `alum_Materno` VARCHAR(30) NOT NULL,
+  `alum_Nombres` VARCHAR(40) NOT NULL,
+  `alum_Nacimiento` CHAR(10) NULL,
+  `alum_Sexo` CHAR(1) NULL,
+  `alum_Telefono` VARCHAR(9) NULL,
+  `alum_Correo` VARCHAR(100) NULL,
+  `alum_Direccion` VARCHAR(100) NULL,
+  `alum_Clave` VARCHAR(20) NOT NULL,
+  `alum_Estado` CHAR(1) NOT NULL,
+  `alum_Registro` DATETIME NOT NULL,
+  `alum_Ubigeo` CHAR(6) NOT NULL,
+  `alum_Foto` VARCHAR(255) NULL,
+  `alum_tipodo_Id` TINYINT NOT NULL,
+  PRIMARY KEY (`alum_Id`),
+  FOREIGN KEY (`alum_Ubigeo`) REFERENCES `distrito`(`dist_Codigo`),
+  FOREIGN KEY (`alum_tipodo_Id`) REFERENCES `tipo_documento`(`tipodo_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM alumno
+-- SELECT DISTINCT(est_Sexo) AS Espe FROM alumno
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `especialidad`
+-- 
+
+DROP TABLE IF EXISTS `especialidad`;
+CREATE TABLE `especialidad` (
+  `espe_Id` TINYINT NOT NULL AUTO_INCREMENT,
+  `espe_Descripcion` VARCHAR(20) NOT NULL UNIQUE,
+  PRIMARY KEY (`espe_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM especialidad
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `area_curricular`
+-- 
+
+DROP TABLE IF EXISTS `area_curricular`;
+CREATE TABLE `area_curricular` (
+  `area_Id` TINYINT NOT NULL AUTO_INCREMENT,
+  `area_Descripcion` VARCHAR(70) NOT NULL UNIQUE,
+  `area_espe_Id` TINYINT NOT NULL,
+  PRIMARY KEY (`area_Id`),
+  FOREIGN KEY (`area_espe_Id`) REFERENCES `especialidad`(`espe_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM AreaCurricular
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `nivel`
+-- 
+
+DROP TABLE IF EXISTS `nivel`;
+CREATE TABLE `nivel` (
+  `niv_Id` TINYINT NOT NULL AUTO_INCREMENT,
+  `niv_Descripcion` VARCHAR(20) NOT NULL UNIQUE,
+  PRIMARY KEY (`niv_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM nivel
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `grado`
+-- 
+
+DROP TABLE IF EXISTS `grado`;
+CREATE TABLE `grado` (
+  `gra_Id` TINYINT NOT NULL AUTO_INCREMENT,
+  `gra_Descripcion` VARCHAR(20) NOT NULL UNIQUE,
+  `gra_niv_Id` TINYINT NOT NULL,
+  PRIMARY KEY (`gra_Id`),
+  FOREIGN KEY (`gra_niv_Id`) REFERENCES `nivel`(`niv_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM nivel
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `seccion`
+-- 
+
+DROP TABLE IF EXISTS `seccion`;
+CREATE TABLE `seccion` (
+  `sec_Id` TINYINT NOT NULL AUTO_INCREMENT,
+  `sec_Descripcion` CHAR(1) NOT NULL UNIQUE,
+  PRIMARY KEY (`sec_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM nivel
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `competencia`
+-- 
+
+DROP TABLE IF EXISTS `competencia`;
+CREATE TABLE `competencia` (
+  `comp_Id` INT NOT NULL AUTO_INCREMENT,
+  `comp_Descripcion` VARCHAR(200) NOT NULL,
+  `comp_area_Id` TINYINT NOT NULL,
+  PRIMARY KEY (`comp_Id`),
+  FOREIGN KEY (`comp_area_Id`) REFERENCES `area_curricular`(`area_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM nota_area
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `alumno_detalle`
+-- 
+
+DROP TABLE IF EXISTS `alumno_detalle`;
+CREATE TABLE `alumno_detalle` (
+  `aldet_Id` INT NOT NULL AUTO_INCREMENT,
+  `aldet_Anio` CHAR(4) NOT NULL,
+  `aldet_gra_Id` TINYINT NOT NULL,
+  `aldet_sec_Id` TINYINT NOT NULL,
+  `aldet_alum_Id` VARCHAR(13) NOT NULL,
+  `aldet_apo_Id` VARCHAR(13) NOT NULL,
+  `aldet_tutor` VARCHAR(13) NOT NULL,
+  PRIMARY KEY (`aldet_Id`),
+  FOREIGN KEY (`aldet_alum_Id`) REFERENCES `alumno`(`alum_Id`),
+  FOREIGN KEY (`aldet_apo_Id`) REFERENCES `apoderado`(`apo_Id`),
+  FOREIGN KEY (`aldet_gra_Id`) REFERENCES `grado`(`gra_Id`),
+  FOREIGN KEY (`aldet_sec_Id`) REFERENCES `seccion`(`sec_Id`),
+  FOREIGN KEY (`aldet_tutor`) REFERENCES `docente`(`doc_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `nota_area`
+-- 
+
+DROP TABLE IF EXISTS `nota_area`;
+CREATE TABLE `nota_area` (
+  `notar_Id` INT NOT NULL AUTO_INCREMENT,
+  `notar_Nota1` TINYINT NOT NULL,
+  `notar_Nota2` TINYINT NOT NULL,
+  `notar_Nota3` TINYINT NOT NULL,
+  `notar_Nota4` TINYINT NOT NULL,
+  `notar_Promedio` TINYINT NOT NULL,
+  `notar_aldet_Id` INT NOT NULL,
+  `notar_doc_Id` VARCHAR(13) NOT NULL,
+  `notar_comp_Id` INT NOT NULL,
+  PRIMARY KEY (`notar_Id`),
+  FOREIGN KEY (`notar_aldet_Id`) REFERENCES `alumno_detalle`(`aldet_Id`),
+  FOREIGN KEY (`notar_doc_Id`) REFERENCES `docente`(`doc_Id`),
+  FOREIGN KEY (`notar_comp_Id`) REFERENCES `competencia`(`comp_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM nota_area
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `tipo_usuario`
+-- 
+
+DROP TABLE IF EXISTS `tipo_usuario`;
+CREATE TABLE `tipo_usuario` (
+  `tipous_Id` TINYINT NOT NULL AUTO_INCREMENT,
+  `tipous_Descripcion` VARCHAR(15) NOT NULL UNIQUE,
+  PRIMARY KEY (`tipous_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM tipo_usuario
+
+-- --------------------------------------------------------
+
+-- 
+-- Estructura de tabla para la tabla `usuario`
+-- 
+
+DROP TABLE IF EXISTS `usuario`;
+CREATE TABLE `usuario` (
+  `usu_Id` VARCHAR(13) NOT NULL,
+  `usu_Documento` VARCHAR(12) NOT NULL UNIQUE,
+  `usu_Paterno` VARCHAR(30) NOT NULL,
+  `usu_Materno` VARCHAR(30) NOT NULL,
+  `usu_Nombres` VARCHAR(40) NOT NULL,
+  `usu_Nacimiento` CHAR(10) NULL,
+  `usu_Sexo` CHAR(1) NULL,
+  `usu_Telefono` VARCHAR(9) NULL,
+  `usu_Correo` VARCHAR(100) NULL,
+  `usu_Direccion` VARCHAR(100) NULL,
+  `usu_Clave` VARCHAR(255) NOT NULL,
+  `usu_Estado` CHAR(1) NOT NULL,
+  `usu_Registro` DATETIME NOT NULL,
+  `usu_Ubigeo` CHAR(6) NOT NULL,
+  `usu_Foto` VARCHAR(255) NULL,
+  `usu_tipodo_Id` TINYINT NOT NULL,
+  `usu_tipous_Id` TINYINT NOT NULL,
+  PRIMARY KEY (`usu_Id`),
+  FOREIGN KEY (`usu_Ubigeo`) REFERENCES `distrito`(`dist_Codigo`),
+  FOREIGN KEY (`usu_tipodo_Id`) REFERENCES `tipo_documento`(`tipodo_Id`),
+  FOREIGN KEY (`usu_tipous_Id`) REFERENCES `tipo_usuario`(`tipous_Id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+-- SELECT * FROM usuario
+-- DELETE FROM usuario
+
+-- --------------------------------------------------------
